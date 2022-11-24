@@ -1,0 +1,737 @@
+
+#include <iostream>
+
+#include <string>
+
+#include <stdio.h>
+
+#include <string.h>
+
+#include <list>
+
+#include <iostream>
+
+#include <vector>
+
+#include <regex>
+
+#include <string>
+
+#include <iterator>
+
+// standard files included in my program
+
+
+
+using namespace std; //organises my code into logical groups
+
+
+// bool and void used within my code
+    bool Validitycheck(char ip[16], string email, int num);
+
+    void DepositMoney(int initialbalance);
+
+    void withdraw(int initialbalance);
+
+    void displaymyBalance(int initialbalance);
+
+    void Transfer_money (int initialbalance);
+
+    void ChangemyDetails(int initialbalance);
+
+    bool IPCheck(char str []);
+
+    bool EmailCheck(string email);
+
+    bool NumberCheck(int num);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Main Program
+
+int main()
+
+{
+
+    int initialbalance=10000;
+
+    cout << "\t C++ Banking system \n";
+
+    cout<< endl;
+
+
+
+    cout << "**********Please provide your credentials that are :: " <<endl
+
+    << " \t **** IP-Address" <<endl
+
+    << "\t **** Email" << endl
+
+    << "\t **** 4 digit pin code " << endl <<endl <<endl;
+
+
+
+    //ip address
+
+     char ipaddress[16]; // size of string
+
+                                // able to read the string from the input itself.
+
+    string email;
+
+    int id;
+
+
+
+    cout << "\t ******** Enter Your IP Address :" ;
+
+    cin.getline(ipaddress, 16);
+
+    cout << endl;
+
+
+
+
+
+    cout << "\t Please enter email addresss:" ;
+
+    cin >> email;
+
+    cout << endl;
+
+
+
+    cout << "\t Please enter 4 digit pincode:";
+
+    cin >>id;
+
+    cout << endl;
+
+
+
+    cout << "******************** WAIT !! We are Checking Your Credentials ********************" << endl <<endl;
+
+
+
+
+
+
+
+    /* CHECKING VALIDITY OF CREDENTIALS */
+
+    bool checkresult= Validitycheck(ipaddress,email,id); // validity check, if the inputs are valid my code will continue
+
+
+
+
+
+    if (checkresult) // if checkresult is true the code will move onto the next section
+
+    {
+
+            cout <<endl<<endl;
+
+
+
+
+
+            cout << " \t Please choose an option" << endl << endl;
+
+
+
+            cout <<" \t   W : Money Withdraw" << endl  //main menu of the banking system itself
+
+            <<"\t   D : Deposit" << endl
+
+            <<"\t   B : Balance" << endl
+
+            <<"\t   T : Transfer" << endl
+
+            <<"\t   C : Change Details" << endl
+
+            <<"\t   Q : Quit or Exit" << endl << endl ;
+
+
+
+
+            string input;
+
+            cin >> input;
+
+            bool t=true;
+
+
+
+            while (t)
+
+            {
+
+                if (input=="W" || input=="w"){ //allows for capital or lowercase
+
+                        cout<<"Calling Withdraw Option";
+
+                        withdraw(initialbalance);
+
+                        t=false;
+
+                }
+
+                else if (input=="D" || input=="d"){ //allows for capital or lowercase
+
+                    cout << "Deposit";
+
+                    DepositMoney(initialbalance);
+
+                    t=false;
+
+                }
+
+                else if (input=="B" || input=="b"){ //allows for capital or lowercase
+
+                     cout << "Display Balance";
+
+                     displaymyBalance(initialbalance);
+
+                     t=false;
+
+                }
+
+                else if (input=="T" || input=="t") //allows for capital or lowercase
+
+                 {
+
+                    cout << "Transfer Money";
+
+                    int transfer;
+
+                    cout<<"How much would you like to transfer?"<<endl;
+
+                    cin>>transfer;
+
+                    initialbalance=initialbalance-transfer;
+
+                    cout<<"your current balance is:"<< initialbalance;
+
+                     t=false;
+
+                 }
+
+                else if (input=="C" || input=="c"){ //allows for capital or lowercase
+
+                     char choice;
+        cout << "\tWhich detail would you like to modify? 1 for pincode 2 for email address and 3 for IP address";  // menu screen
+
+        std::cin >> choice;
+
+        if (choice == '1')
+        {
+            int id;
+            std::cout << "Enter new pin code:"; // enter new pin code
+            std::cin >> id;
+            if (id > 0000 && id <= 9999) // only allow numbers between 0000 and 9999 to be valid
+            {
+                std::cout << "Your new pincode is " << id << endl; // displays new pin code for customer
+            }
+            else
+                std::cout << "Please try again!!\n";
+        }
+        else if (choice == '2')
+        {
+            string email;
+            std::cout << "Enter new email address:";
+            std::cin >> email;
+            string mail1 = "bcu.ac.uk";
+            size_t valid = email.find(mail1); //
+
+
+            if (valid != string::npos) // one or both are turn return true
+            {
+                cout << "Email address has been updated to " << email << endl;
+
+            }
+            else
+                cout << "Non-authorised domain\n";
+        }
+
+        else if (choice == '3')
+         {
+            char ip[16];
+            cout << "Enter ip address :";
+            cin >> ip;
+            char newip[16]; //variable
+            for (int i = 0; ip[i] != 0; i++)
+            {
+                newip[i] = ip[i];
+            }
+
+            int count = 0;
+            for (int i = 0; ip[i] != 0; i++)
+            {
+                if (ip[i] == '.' && (ip[i + 1] > '0' && ip[i + 1] <= '9')) // equation to validate new ip address
+                    count++;
+            }
+            bool flag = true;
+            char *ptr;
+            ptr = strtok(ip, ".");
+            if (count == 3)
+            {
+                while (ptr != NULL)
+                {
+                    int x = stoi(ptr);
+                    if (!(x > 0 && x < 255))
+                    {
+                        flag = 0;
+                        break;
+                    }
+                    ptr = strtok(NULL, ".");
+                }
+            }
+            if (count == 3 && flag == true)
+                cout << "New IP address is" << newip << endl;
+            else
+            {
+                cout << "IP address is invalid";
+            }
+        }
+    }
+
+
+
+
+
+                 {
+
+                  cout << endl;
+
+                  cout<< "Select correct value for Example W for Withdraw .... Try Again" <<endl<<endl;
+
+                  cout <<"   W : Money Withdraw" << endl
+
+                    <<"   D : Deposit" << endl
+
+                    <<"   B : Balance" << endl
+
+                    <<"   T : Transfer" << endl
+
+                    <<"   T : Transfer" << endl
+
+                    <<"   C : Change Details" << endl
+
+                    <<"   Q : Quit" << endl << endl ;
+
+                  cin >> input;
+
+                 }
+
+                }
+
+    }
+    }
+
+
+
+
+
+
+
+
+
+
+
+/* Function Definition */
+
+
+
+    // Function for Validity Check
+
+
+
+    bool  Validitycheck(char ip[16], string email, int num)
+
+    {
+
+        /* Here you need to perform three checks
+
+        1. Call the Validate IP address Function -- Lab 4G.
+
+        2. Call the Validate Email Address Function -- Lab 5A.
+
+        3. Call the function for checking num >0000 and num <9999
+
+        */
+
+
+
+    // Example:
+
+   bool xx;
+
+    bool icheck = IPCheck(ip);
+
+    bool emailcheck= EmailCheck(email);
+
+    cout<<"11111111"<<emailcheck;
+
+    bool numcheck= NumberCheck(num);
+
+
+
+    if (icheck && emailcheck && numcheck)
+
+    {
+
+    cout <<" \t \t Check Successful -------------- " <<endl; // returns truee boolean to main()
+
+    xx= true;
+
+    }
+
+    else
+
+    {
+
+    cout <<"\t \t Check Unsuccessful XXXXXXXXXXX"<<endl; // returns boolean false value to main()
+
+    xx=false;
+
+    }
+
+    cout<<endl << endl;
+
+    cout <<" \t \t CHECK Completed ........"<<endl;
+
+
+
+
+
+    return xx; // you should replace this to value your returning depending upon the credentials
+
+    }
+
+
+
+
+   void quit()
+    {
+        std::cout << "Ending system, thank you for using" << endl; // ends the program
+    }
+
+     // Function for Deposit
+
+    void DepositMoney(int initialbalance)
+
+    {
+
+        int deposit;
+
+        cout<<"Deposit amount"<<endl;
+
+       cin>>deposit;
+
+        if (deposit>0)
+
+        {
+
+            initialbalance=initialbalance+deposit;
+
+            cout<< "new balance is" << initialbalance; // displays balance after depositing
+
+        }
+
+
+
+    }
+
+
+
+
+
+     // Function for Withdraw
+
+
+
+   void withdraw(int initialbalance)
+
+    {
+
+        int withdraw;
+
+        cout<<"How much you want to withdraw"<<endl;
+
+        cin>>withdraw;
+
+        if (withdraw <= initialbalance)
+
+        {
+
+            initialbalance=initialbalance-withdraw;
+
+            cout<<" new balance: " <<initialbalance<<endl;
+
+        }
+
+        else{
+
+            cout<<"not enough funds available" <<endl;
+
+            }
+
+// displays funds after withdrawal
+
+    }
+
+     // Function for Display Balance
+
+    void displaymyBalance(int initialbalance)
+
+    {
+
+        int displaymyBalance;
+
+        cout<<"------------------------"<<endl;
+
+        cout<<"Your balance is:"<<initialbalance<<endl;
+
+
+
+        //cin>>displaybalance;
+
+        //if (initialbalance)
+
+    // display balance after adding
+
+    }
+
+    //function for Transfer Money
+
+    void Transfer_money (int initialbalance)
+
+    {
+
+        int transfer_money;
+
+        cout <<"Transfer money" <<endl;
+
+        int receiver_details[6];
+
+        cout <<"Enter recipient information"<<endl;
+
+        cin >> receiver_details[6];
+
+        if (receiver_details[6])
+
+        {
+
+            cout<<"Account must be 6 digits"<<endl;
+
+        }
+
+
+
+        else{
+
+
+
+        cout<<"Enter amount for transfer"<<endl;
+
+        cin>>transfer_money;
+
+        initialbalance=initialbalance-transfer_money;
+
+
+
+        cout<<"Transferring:"<<transfer_money<<endl;
+
+        cout<<"New Current balance is :"<<initialbalance<<endl;
+
+
+
+
+
+        }
+
+// Get how much user want to transfer and display balance after transfer
+
+    }
+
+     // Function for change Details
+
+
+
+    void ChangemyDetails()
+
+    {
+
+        cout <<"-----Provide your new IP address, email and user ID------" << endl;
+
+        char ipaddress[16];
+
+
+
+        string new_email;
+
+        int new_id;
+
+
+
+        cout << "\t ---- Enter your new IP address:";
+
+        cin.ignore();
+
+        cin.getline(ipaddress, 16);
+
+        cout << endl;
+
+
+
+        cout << "\t ---- Enter your new email address:";
+
+        cin>>new_email;
+
+        cout << endl;
+
+
+
+        cout << "\t ---- Enter your new ID:";
+
+        cin>>new_id;
+
+        cout << endl;
+
+
+
+
+
+
+
+        bool updated_details =Validitycheck(ipaddress, new_email, new_id);
+
+        if (updated_details == true)
+
+        {
+
+          cout<<"Here are your new details:" <<endl;
+
+            cout<<ipaddress<<endl;
+
+            cout<<new_email<<endl;
+
+            cout<<new_id<<endl;
+
+
+
+    }
+
+    else{
+
+
+
+        cout<<"Please enter your details again"<<endl;
+
+    }
+
+
+
+    }
+
+     bool EmailCheck(string email)
+{
+    string mail1 = "bcu.ac.uk", mail2 = "mail.bcu.uk";
+    size_t found1 = email.find(mail1); // if mail 1 found return index else npos value
+    size_t found2 = email.find(mail2); // if mail 2 found return index else npos value
+
+    if (found1 != string::npos || found2 != string::npos) // If one or both are turn return true
+        return 1;
+    else
+        return 0;
+        }
+
+   bool IPCheck(char str [])
+
+   {
+
+    int iparray [4]; // this will hold values when "." is removed from the string e.g 192.168.1.1 ====> 192 168 1 1
+
+           int i=0;
+
+
+
+            // The code to split the string using "." operator
+
+            char *token = strtok(str, ".");
+
+            while (token != NULL)
+
+            {
+
+                int num = stoi(token);   // this line convert string to integer. Example handling ip address 192.168.1.1
+
+                iparray[i]=num;          // this line puts num to iparray for example iparray[0]=192, iparray[1]=168, iparray[2]=1, iparray[3]=1,
+
+                token = strtok(NULL, ".");
+
+                i++;
+
+            }
+
+            int getArrayLength = sizeof(iparray) / sizeof(int); //sizeof(iparray) is library function returns size in bytes when need to find number of elements
+
+                                                              // in iparray thats why we divided it by sizeof(int) which is 4 bytes.
+
+        // if the token size is not equal to four
+
+            if (getArrayLength-1 != 3)
+
+            {
+
+                return false;
+
+            }
+
+
+
+   return true;
+
+   }
+
+
+
+
+
+
+
+
+
+
+
+    bool NumberCheck(int num)
+
+    {
+
+        if (num > 999 && num < 9999)
+
+    {
+
+        return true;
+
+    }
+
+     else   // code for number check, return true or false. Hint simple if statement for > and < logic
+
+    {return false;
+
+    }
+
+    }
+
+    // Any other Function. Do not forget to declare it as well
